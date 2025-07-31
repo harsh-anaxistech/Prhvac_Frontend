@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import BgImage from "../../assets/Blogs-banner.jpg";
 import API from "../../utils/api"; // Adjust the path to your api.jsx
 import { slugify } from "../../utils/slugify"; // Adjust the path to your slugify utility
+import he from "he"; 
 
 const BlogDetail = () => {
   const { slug, id } = useParams(); // Extract both slug and id
@@ -41,7 +42,7 @@ const BlogDetail = () => {
         const sortedAndFilteredBlogs = blogsResponse.data.blogs
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort newest first
           .filter((b) => b._id !== id) // Exclude the current blog post
-          .slice(0, 3) // Take only the first 3 recent posts
+          .slice(0, 4) // Take only the first 3 recent posts
           .map((blog) => ({
             id: blog._id,
             title: blog.title,
@@ -129,8 +130,9 @@ const BlogDetail = () => {
               <img
                 src={post.image}
                 alt={post.title}
-                className="w-full h-[400px] object-cover rounded-lg"
+                className="w-full h-[400px] md:h-[602px] object-cover rounded-lg"
               />
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-lg"></div>
               {/* Date and Month on top left */}
               <div className="absolute top-8 left-8 text-white bg-black bg-opacity-50 px-3 py-1 rounded-md">
@@ -139,14 +141,16 @@ const BlogDetail = () => {
                 <span className="text-sm">{post.month}</span>
               </div>
               {/* Title on bottom */}
-              <div className="absolute bottom-8 left-8 text-white">
-                <h1 className="text-4xl font-bold mb-2">{post.title}</h1>
+              <div className="absolute bottom-8 left-4 right-4 text-white">
+                <h1 className="text-2xl md:text-3xl  font-bold mb-2">
+                  {post.title}
+                </h1>
               </div>
             </div>
             {/* Content */}
             <div
-              className="prose prose-lg max-w-none text-gray-700 mt-5"
-              dangerouslySetInnerHTML={{ __html: post.description }} // Use dangeroulsySetInnerHTML for description
+              className="prose prose-lg max-w-none text-justify text-gray-700 mt-5"
+              dangerouslySetInnerHTML={{ __html: he.decode(post.description) }}
             ></div>
           </article>
 
@@ -202,8 +206,11 @@ const BlogDetail = () => {
                         />
                         <div>
                           <h4 className="font-medium text-[#0B1437] group-hover:text-[#00508D] transition-colors line-clamp-2">
-                            {recentPost.title}
+                            {recentPost.title.length > 30
+                              ? recentPost.title.substring(0, 30) + "..."
+                              : recentPost.title}
                           </h4>
+
                           <span className="text-sm text-gray-500">
                             {recentPost.date} {recentPost.month}
                           </span>

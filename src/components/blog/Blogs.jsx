@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import BgImage from "../../assets/Blogs-banner.jpg";
 import API from "../../utils/api"; // Adjust the path to your api.jsx
 import { slugify } from "../../utils/slugify"; // Adjust the path to your slugify utility
-
+import he from "he"; 
 const Blogs = () => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,6 +45,13 @@ const Blogs = () => {
     };
     fetchBlogs();
   }, []);
+
+function getPlainTextFromHtml(html) {
+  const decoded = he.decode(html);
+  const div = document.createElement("div");
+  div.innerHTML = decoded;
+  return div.textContent || div.innerText || "";
+}
 
   // Get current posts for pagination
   const indexOfLastPost = currentPage * postsPerPage;
@@ -174,9 +181,10 @@ const Blogs = () => {
                 height={160}
               />
               <p className="text-slate-600 text-sm mb-6 line-clamp-3">
-                {post.description.length > 120
-                  ? post.description.substring(0, 120) + "..."
-                  : post.description}
+                {getPlainTextFromHtml(post.description).length > 120
+                  ? getPlainTextFromHtml(post.description).substring(0, 120) +
+                    "..."
+                  : getPlainTextFromHtml(post.description)}
               </p>
 
               <Link

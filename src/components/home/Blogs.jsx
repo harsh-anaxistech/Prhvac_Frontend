@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API from "../../utils/api"; // Adjust the path to your api.jsx
 import { slugify } from "../../utils/slugify"; // Adjust the path to your slugify utility
+import he from "he";
 
 const Blogs = () => {
   const [blogPosts, setBlogPosts] = useState([]);
@@ -42,6 +43,12 @@ const Blogs = () => {
     };
     fetchBlogs();
   }, []); // Empty dependency array means this runs once on mount
+  function getPlainTextFromHtml(html) {
+    const decoded = he.decode(html);
+    const div = document.createElement("div");
+    div.innerHTML = decoded;
+    return div.textContent || div.innerText || "";
+  }
 
   if (loading) {
     return (
@@ -94,10 +101,11 @@ const Blogs = () => {
                 width={260}
                 height={160}
               />
-              <p className="text-slate-600 text-justify text-sm mb-4">
-                {post.description.length > 120
-                  ? post.description.substring(0, 120) + "..."
-                  : post.description}{" "}
+              <p className="text-slate-600 text-sm mb-6 line-clamp-3">
+                {getPlainTextFromHtml(post.description).length > 120
+                  ? getPlainTextFromHtml(post.description).substring(0, 120) +
+                    "..."
+                  : getPlainTextFromHtml(post.description)}
               </p>
 
               <Link
