@@ -25,7 +25,7 @@ const BlogDetail = () => {
           id: blog._id,
           title: blog.title,
           description: blog.description,
-          image: `https://prhvacapi.anaxistech.com/${blog.image}`,
+          image: `https://api.prhvac.in/${blog.image}`,
           date: new Date(blog.createdAt).getDate().toString(),
           month: new Date(blog.createdAt).toLocaleString("en-US", {
             month: "short",
@@ -47,7 +47,7 @@ const BlogDetail = () => {
             id: blog._id,
             title: blog.title,
             description: blog.description,
-            image: `https://prhvacapi.anaxistech.com/${blog.image}`,
+            image: `https://api.prhvac.in/${blog.image}`,
             date: new Date(blog.createdAt).getDate().toString(),
             month: new Date(blog.createdAt).toLocaleString("en-US", {
               month: "short",
